@@ -25,7 +25,7 @@ I hold a number of professional certificates that I did for fun (some were graci
 - **Splunk Core Certified User** _(completed Summer 2019)_
 
 
-You may find a copy of my CV [here](). You may also contact me at `me(at)waituck(dot)sg`.
+You may find a copy of my CV [here](https://github.com/wongwaituck/wongwaituck.github.io/raw/master/CV.pdf). You may also contact me at `me(at)waituck(dot)sg`.
 
 As always, hack on!
 
