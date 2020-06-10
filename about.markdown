@@ -6,7 +6,7 @@ permalink: /about/
 
 Hello! I am Wai Tuck, a first year PhD student at the School of Information Systems at Singapore Management University. My interests are wide, but primarily lies in mechanism design and its intersection with cybersecurity. I am lucky to be advised by Professor [Arunesh Sinha](http://aruneshsinha.net/), who is an expert in this area.
 
-I graduated with top honours with a Bachelor of Science in Information Systems (with a second major in Applied Statistics) in Singapore Management University. I was fortunate to be part of the SMU-CMU Fast-Track program, and graduated with a Master of Science in Information Security from the [Information Networking Institute](https://www.cmu.edu/ini/) at Carnegie Mellon University.
+I graduated with top honours with a Bachelor of Science in Information Systems (with a second major in Applied Statistics) at Singapore Management University. I was fortunate to be part of the SMU-CMU Fast-Track program, and graduated with a Master of Science in Information Security from the [Information Networking Institute](https://www.cmu.edu/ini/) at Carnegie Mellon University.
 
 My undergraduate research was the implementation of a tool to analyze syntactic dependencies of software to measure of change effort required for a proposed change in a given codebase. I performed empirical analysis to see if the heuristic holds for a number of large Java programs. The tool was later used to teach students design patterns in software engineering. I was fortunate to have Professor Kevin Steppe as my advisor for the project, who encouraged me to take it up and
 guided me through every step of the process in the research.
