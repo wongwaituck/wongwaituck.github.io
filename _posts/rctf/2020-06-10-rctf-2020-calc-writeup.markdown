@@ -99,7 +99,7 @@ Speaking of floats, I decided to try something interesting. Recall that we previ
 So we technically have the strings `"NAN", "INF", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"`, but any combination of these strings won't give us shell _(yet)_, we have to dig deeper!
 
 #### Looking for more primitives
-I got stuck here for quite a bit and decided to look for all possible operators in PHP. I did browse around and managed to find that `->`, `=>`, `{`, `}` and `::` are legal operators through extensive web searching (thanks Google!). While writing this article I found a more [extensive list of tokens that are used in PHP](https://www.php.net/manual/en/tokens.php) which would have been much better resource.
+I got stuck here for quite a bit and decided to look for all possible operators in PHP. I did browse around and managed to find that `->`, `=>`, `{`, `}` and `::` are legal operators through extensive web searching (thanks Google!). While writing this article I found a more [extensive list of tokens that are used in PHP](https://www.php.net/manual/en/tokens.php) which would have been a much better resource.
 
 I toyed around with the idea of using `->` (which is the `T_OBJECT_SEPARATOR` used to assign and retrieve values from an object), `=>` (which is the `T_DOUBLE_ARROW` used to assign values in an array), and `::` (which is a [scope resolution operator](https://www.php.net/manual/en/language.oop5.paamayim-nekudotayim.php) which has a pretty interesting history behind its name) before realizing they won't work.
 
@@ -110,7 +110,7 @@ Finally, we are left with `{` and `}`. These symbols are actually pretty interes
 ((1/0).(1/0)){0} // evaluates to "I"
 {% endhighlight %}
 
-So we now have the strings `"N", "A", "I", "F", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"`. We can also add additional characters like `"."` from coercing floats to strings and `"-"` by coercing negative numbers, but we still don't have the write letters to construct calls to functions that we want, and we still can't construct arbitrary characters. If only we had some way of changing these characters...
+So we now have the strings `"N", "A", "I", "F", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"`. We can also add additional characters like `"."` from coercing floats to strings and `"-"` by coercing negative numbers, but we still don't have the right letters to construct calls to functions that we want, and we still can't construct arbitrary characters. If only we had some way of changing these characters...
 
 #### Quick Math with Strings
 
@@ -258,7 +258,7 @@ r = requests.get(url, params=params)
 
 #params = {'num': d }
 #r = requests.get(url, params=params)
-#sprint r.text
+#print r.text
 
 {% endhighlight %}
 
