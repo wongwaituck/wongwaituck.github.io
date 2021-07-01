@@ -18,8 +18,8 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: waituck
-email: me@waituck.sg
+title: Hack On
+email: me(at)waituck.sg
 description: >- # this means to ignore newlines until "baseurl:"
     Reflections, musings and CTFs 
 baseurl: "" # the subpath of your site, e.g. /blog
@@ -28,7 +28,7 @@ twitter_username: waituckk
 github_username:  wongwaituck
 
 # Build settings
-theme: jekyll-theme-cayman
+theme: minima
 plugins:
   - jekyll-feed
 
