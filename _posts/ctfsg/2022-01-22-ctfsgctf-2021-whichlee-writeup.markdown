@@ -17,7 +17,8 @@ For CTFSGCTF 2021, I created a problem that was inspired by my current research 
 > Which Lee do you want to be? Can you be the best Lee of them all?  
 > Find out which Lee you are at [this website]()!  
 > p.s. we are using pytorch 1.8.0+cpu  
-> Hint: Numerical InstabiLEEty 
+> Hint: Numerical InstabiLEEty
+
 > Author: waituck
 
 **Solves: 3**
@@ -283,7 +284,7 @@ Finally, if the entries are negative, we get a `-inf`:
 tensor([-inf])
 {% endhighlight %}
 
-In any case, the step of the forward pass of the network passes the output to a softmax
+In any case, the next step of the forward passes the output to a softmax:
 
 {% highlight python %}
 def forward(self, x):
@@ -336,7 +337,7 @@ def forward(self, x):
     probs = F.softmax(x) 
 {% endhighlight %}
 
-All that's left is to find an image that corresponds to an output of all zeroes in the commented line. One easy first step is to exploit the Rectified Linear Unit (ReLU) activation function, which if you recall looks something like this:
+All that's left is to find an image that corresponds to an output with each component being exactly the same in the commented line. One easy first step is to exploit the Rectified Linear Unit (ReLU) activation function, which if you recall looks something like this:
 
 ![ReLU in Picture, credits: https://www.researchgate.net/figure/ReLU-activation-function_fig3_319235847](/images/whichlee_ReLU-activation-function.png)
 
