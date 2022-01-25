@@ -340,14 +340,17 @@ All that's left is to find an image that corresponds to an output of all zeroes 
 
 ![ReLU in Picture, credits: https://www.researchgate.net/figure/ReLU-activation-function_fig3_319235847](/images/whichlee_ReLU-activation-function.png)
 
-We see it's a LOT easier to get zeroes in our output than any other number. We set our target for the all zeroes vector as an output for the commented line. However, it turns out that finding an input that corresponds to an output in a neural network is a really hard problem, and isn't solvable in general. Thankfully, in our case, the neural network is formed using components that we can throw into an solver (since the network essentially consists of linear components plus the ReLU activation function, which is pretty much linear). [Marabou](https://github.com/NeuralNetworkVerification/Marabou) is an SMT-based tooling that allows us to perform queries on the network, for example, we can perform a local robustness query on a network to see if any value in some delta around a given input gives a different output, as shown below:
+We see it's a LOT easier to get zeroes in our output than any other number. We set our target for the all zeroes vector as an output for the commented line. However, it turns out that finding an input that corresponds to a given output in a neural network is a really hard problem, and isn't solvable in general. Thankfully, in our case, the neural network is formed using components that we can throw into a solver (since the network essentially consists of linear components plus the ReLU activation function, which is pretty much linear). [Marabou](https://github.com/NeuralNetworkVerification/Marabou) is an SMT-based tooling that allows us to perform queries on the network, for example, we can perform a local robustness query on a network to see if any value in some delta around a given input meets a certain bound, as shown below:
 
 {% highlight python %}
 delta = 0.03
+# set bounds on input
 for h in range(inputVars.shape[0]):
     for w in range(inputVars.shape[1]):
         network.setLowerBound(inputVars[h][w][0], 0.5-delta)
         network.setUpperBound(inputVars[h][w][0], 0.5+delta)
+
+# set bounds on output
 network.setLowerBound(outputVars[0], 7.0)
 
 print("Check query with more restrictive output constraint (Should be UNSAT)")
