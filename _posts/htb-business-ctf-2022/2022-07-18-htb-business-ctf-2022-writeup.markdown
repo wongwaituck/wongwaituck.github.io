@@ -13,7 +13,7 @@ Last weekend, I participated in [HackTheBox's Business CTF](https://www.hacktheb
 
 ### \[Pwn\] Superfast (unsolved) - (18 Solves)
 
-I usually don't touch pwn when playing with CTF.SG because that's not my forte (and there are tons of people better than me at this), but in the absence of any other pwners on team I did this CTF played with, I always love to take the opportunity to actually work on pwning. We are given a PHP plugin pwn as an *easy* challenge, which scared the living poop out of me whe I first saw it. Thankfully, the bug wasn't too difficult to spot.
+I usually don't touch pwn when playing with CTF.SG because that's not my forte (and there are tons of people better than me at this), but in the absence of any other pwners on team I did this CTF with, I always love to take the opportunity to actually work on pwning. We are given a PHP plugin pwn as an *easy* challenge, which scared the living poop out of me whe I first saw it. Thankfully, the bug wasn't too difficult to spot.
 
 {% highlight c %}
 zend_string* decrypt(char* buf, size_t size, uint8_t key) {
