@@ -6,20 +6,25 @@ permalink: /service/
 
 ## Referreed Publications
 
-- Sarah Kinsey, **Wong Wai Tuck**, Arunesh Sinha, and Thanh H. Nguyen. <br/>
+- **Wong Wai Tuck**, Sarah Kinsey, Ramesha Karunasena, Thanh H. Nguyen, Arunesh Sinha <br/>
+[Beyond NaN: Resiliency of Optimization Layers in The Face of Infeasibility](https://arxiv.org/abs/2202.06242) <br/>
+Proceedings of the 37th AAAI Conference on Artificial Intelligence, Safe & Robust AI track (Feb 2023)
+
+- Sarah Kinsey, **Wong Wai Tuck**, Arunesh Sinha, and Thanh H. Nguyen <br/>
 [An Exploration of Poisoning Attacks on Data-based Decision Making](/docs/GameSec2022_PoisonAttack.pdf) <br/>
-Proceedings of the Conference on Decision and Game Theory for Security (GameSec), Oct 2022
+Proceedings of the Conference on Decision and Game Theory for Security (GameSec) (Oct 2022)
 
 - Ryan Butler, **Wong Wai Tuck**, Arunesh Sinha and Thanh H. Nguyen <br/>
-[Poisoning Attacks on Data-based Decision Making: A Preliminary Study](https://guaguakai.github.io/aasg2022/program/). <br/>
-The 3rd Autonomous Agents for Social Good Workshop (hosted at AAMAS 2022).
+[Poisoning Attacks on Data-based Decision Making: A Preliminary Study](https://guaguakai.github.io/aasg2022/program/) <br/>
+The 3rd Autonomous Agents for Social Good Workshop hosted at the 20th International Conference on Autonomous Agents and Multiagent Systems (AAMAS) (May 2022)
 
 - Kevin Steppe, Sally Chin, **Wong Wai Tuck**. <br/>
 [Improving the Teaching of Software Design with Automated Modelling of Syntactic Dependencies.](https://ieeexplore.ieee.org/document/8166695) <br/>
-2017 IEEE 30th Conference on Software Engineering Education and Training (CSEE&T)
+IEEE 30th Conference on Software Engineering Education and Training (CSEE&T) (2017)
 
-## Talks/Workshops
+## Talks
 
+- ["Attacking Reinforcement Learning via Adversarial Policies: Current State and Future Opportunities"](https://www.infosec-city.com/schedule/sin-rl-con#:~:text=Attacking%20Reinforcement%20Learning%20via%20Adversarial%20Policies%3A%20Current%20State%20and%20Future%20Opportunities), invited talk at SINCON Main Track (2023)
 - ["Understanding the TLS Ecosystem by Probing the Internet"](https://www.youtube.com/watch?v=jP8kSkVaG2g), invited talk at GeekCamp (2022)
 - ["Dirty Deeds Done Dirt Cheap"](https://www.youtube.com/watch?v=iVEqlKigk5s), invited talk at NUS Greyhats (2021)
 - ["Tutorial on Babby's First Adversarial Attack"](https://github.com/wongwaituck/adversarial-attack-ml-workshop), invited talk at Division Zero (Div0) AI Security Quarter (2021) 
