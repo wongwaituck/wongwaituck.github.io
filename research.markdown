@@ -6,6 +6,10 @@ permalink: /service/
 
 ## Referreed Publications
 
+- Darion Cassel, Limin Jia, **Wong Wai Tuck** <br/>
+[NodeMedic: End-to-End Analysis of Node.js Vulnerabilities with Provenance Graphs]() <br/>
+Proceedings of the 8th IEEE European Symposium on Security and Privacy (EuroS&P 2023), to appear
+
 - **Wong Wai Tuck**, Sarah Kinsey, Ramesha Karunasena, Thanh H. Nguyen, Arunesh Sinha <br/>
 [Beyond NaN: Resiliency of Optimization Layers in The Face of Infeasibility](https://arxiv.org/abs/2202.06242) <br/>
 Proceedings of the 37th AAAI Conference on Artificial Intelligence, Safe & Robust AI track (Feb 2023)
@@ -36,7 +40,7 @@ IEEE 30th Conference on Software Engineering Education and Training (CSEE&T) (20
 
 **Reviewing**
 
-AAAI 2022, ICML 2022, NeurIPS 2022
+AAAI 2022, ICML 2022, NeurIPS 2022, ICML 2023, NeurIPS 2023
 
 **Volunteering**
 
