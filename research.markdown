@@ -28,7 +28,7 @@ IEEE 30th Conference on Software Engineering Education and Training (CSEE&T) (20
 
 ## Talks
 
-- ["Attacking Reinforcement Learning via Adversarial Policies: Current State and Future Opportunities"](https://www.infosec-city.com/schedule/sin-rl-con#:~:text=Attacking%20Reinforcement%20Learning%20via%20Adversarial%20Policies%3A%20Current%20State%20and%20Future%20Opportunities), invited talk at SINCON Main Track (2023)
+- ["Attacking Reinforcement Learning via Adversarial Policies: Current State and Future Opportunities"](https://www.youtube.com/watch?v=jKvuS1LirYk), invited talk at SINCON Main Track (2023)
 - ["Understanding the TLS Ecosystem by Probing the Internet"](https://www.youtube.com/watch?v=jP8kSkVaG2g), invited talk at GeekCamp (2022)
 - ["Dirty Deeds Done Dirt Cheap"](https://www.youtube.com/watch?v=iVEqlKigk5s), invited talk at NUS Greyhats (2021)
 - ["Tutorial on Babby's First Adversarial Attack"](https://github.com/wongwaituck/adversarial-attack-ml-workshop), invited talk at Division Zero (Div0) AI Security Quarter (2021) 
@@ -44,7 +44,7 @@ AAAI 2022, ICML 2022, NeurIPS 2022, ICML 2023, NeurIPS 2023
 
 **Volunteering**
 
-- CTFSGCTF, Challenge Author - (2021 - Present)
+- CTFSGCTF, Challenge Author - (2021 - 2023)
 - Division Zero (Div0), Crew Member - (2017 - Present) 
 - WhiteHacks (Capture the Flag), Challenge Author - (2018 - 2020)
 - WhiteHacks (Capture the Flag), Organiser - (2016 - 2017)
