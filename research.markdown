@@ -6,7 +6,7 @@ permalink: /service/
 
 ## Referreed Publications
 
-- Darion Cassel, Limin Jia, **Wong Wai Tuck** <br/>
+- Darion Cassel,  **Wong Wai Tuck**, Limin Jia<br/>
 [NodeMedic: End-to-End Analysis of Node.js Vulnerabilities with Provenance Graphs](https://www.andrew.cmu.edu/user/liminjia/research/papers/nodemedic-eurosp23.pdf) <br/>
 Proceedings of the 8th IEEE European Symposium on Security and Privacy (EuroS&P 2023)
 
