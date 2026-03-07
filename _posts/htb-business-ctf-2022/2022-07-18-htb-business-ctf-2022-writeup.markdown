@@ -6,12 +6,10 @@ tags: ctf htb
 * TOC
 {:toc}
 
-## Introduction
-
 Last weekend, I participated in [HackTheBox's Business CTF](https://www.hackthebox.com/events/htb-business-ctf-2022), which was really fun. I generally find the more hardcore CTFs are too menacing for general consumption (looking at you DEFCON, why so many reversing challenges), and HTB actually does a great job balancing the difficulty and fun of the challenges. In the spirit of being more consistent in my blogging and writing, I have decided to write some writeups for the challenges I worked on for this competition. This writeup is more verbose than your usual writeups in order to aid understanding, so be warned!
 
 
-### \[Pwn\] Superfast (unsolved) - (18 Solves)
+## \[Pwn\] Superfast (unsolved) - (18 Solves)
 
 I usually don't touch pwn when playing with CTF.SG because that's not my forte (and there are tons of people better than me at this), but in the absence of any other pwners on team I did this CTF with, I always love to take the opportunity to actually work on pwning. We are given a PHP plugin pwn as an *easy* challenge, which scared the living poop out of me whe I first saw it. Thankfully, the bug wasn't too difficult to spot.
 
@@ -141,7 +139,7 @@ It was only after the competition that I found out that a good portion of the so
 HTB{rophp1ng_4r0und_th3_st4ck!}
 ```
 
-### \[Pwn\] Payback - (34 Solves)
+## \[Pwn\] Payback - (34 Solves)
 
 After that unfortunate encounter with Superfast (and burning a ton of time for not solving it), I turned to another pwn challenge which was thankfully easier. We are provided source code in `main.c` so we can skip the step of opening the binary up in IDA. I don't remember what the challenge binary does because the code was decently long, but this definitely stands out like a sore thumb:
 
@@ -239,7 +237,7 @@ Which gives us shell and the flag :)
 HTB{w3_sHoulD_1n1t1at3_a_bug_bounty_pr0gram}
 ```
 
-### \[Pwn\] Insider - (21 Solves)
+## \[Pwn\] Insider - (21 Solves)
 
 This challenge is a really really long binary which implements a full FTP server. There's quite a fair bit of reversing to go about (which I shall not get into here), but the general flow is to open it in IDA and rename and mark interesting functions.
 
@@ -368,7 +366,7 @@ if __name__ == '__main__':
     main()
 ```
 
-### \[Reversing\] Mr. Abilgate - (27 Solves)
+## \[Reversing\] Mr. Abilgate - (27 Solves)
 
 A teammate of mine identified it was UPX packed, so I continued from there. If you tried unpacking it, the binary becomes broken (you can run it in a debugger and you would realize some addresses are not translated properly and results in a `EXCEPTION_ACCESS_VIOLATION` in some address starting at `0x14...`). Here's an example of an error you might face in the unpacked binary.
 
@@ -512,7 +510,7 @@ Archive:  ImportantAssets.xls
 ./xl/sharedStrings.xml:<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="23" uniqueCount="23"><si><t>CASH RECEIPT</t></si><si><t>DATE</t></si><si><t>RECEIPT NO.</t></si><si><t>FROM</t></si><si><t>TO</t></si><si><t>DESCRIPTION</t></si><si><t>TOTAL</t></si><si><t>SUBTOTAL</t></si><si><t>DISCOUNT</t></si><si><t>SUBTOTAL LESS DISCOUNT</t></si><si><t>TAX RATE</t></si><si><t>TOTAL TAX</t></si><si><t>Balance Due</t></si><si><t>Payment received as:</t></si><si><t>Cash</t></si><si><t>HTB{b1g_br41ns_b1gg3r_p0ck3ts_sm4ll3r_p4y0uts}</t></si><si><t>UNDISCLOSED</t></si><si><t>123 Down str.</t></si><si><t>Los Angeles</t></si><si><t>you@dontcare.sorry</t></si><si><t>The greatest asset we got.</t></si><si><t>agent@state.com</t></si><si><t>ENIGMA</t></si></sst>
 ```
 
-### \[Reversing\] Breakin (unsolved) - (20 Solves)
+## \[Reversing\] Breakin (unsolved) - (20 Solves)
 
 This was a C++ reversing challenge which is a bit intimidating but the actual non-library code was pretty tiny and had debug symbols so it could be quickly reversed. Once you reverse `getSecret`, you find the secret admin page and the password query needed (Breakin's flag) to get to the secret admin page, where you can upload marshaled Python objects that would execute on the server (gleaned from `getExec`). Figuring out how the marshaled object should look like was a pain and it kept crashing and returning `<NULL>`. The first step is to pull all the libraries to run it locally to iterate faster, because one invalid input crashes the container **forever**. It was until I found [this article](https://awasu.com/weblog/embedding-python/calling-python-code-from-your-program/) detailing the steps to constructing it before I could construct a valid marshaled object for the service's consumption.
 
@@ -553,7 +551,7 @@ HTB{d1d_y0u_w4lk_th3_tr33_f0r_m3?}
 
 Credits to this [blog post](https://davidebove.com/blog/2021/03/27/how-to-dump-process-memory-in-linux/) for the memory dump script!
 
-### \[Web\] Felonious Forums - (35 Solves)
+## \[Web\] Felonious Forums - (35 Solves)
 
 This challenge was quite a rollercoaster ride. You are given a source code to a forum where you can post threads and comments in Markdown. A report feature is provided to report a post to an administrator. The goal is to steal the administrator's cookie, as shown in the code from `bot.js` below:
 
@@ -768,7 +766,7 @@ print(r.text)
 
 P.S. I honestly found the directory traversal to be quite contrived and wished it wasn't there and instead in its place a better cache key collision mechanism was thought of.
 
-### \[Web\] PhishTale - (24 Solves)
+## \[Web\] PhishTale - (24 Solves)
 
 My teammates worked on this one more than I did. This was a nice N-day exploitation challenge, chaining two n-days together for remote code execution. A phishing server stood behind a varnish server, and all calls to a specific endpoint to generate payloads were only accessible on localhost. Thankfully, with the [request smuggling vulnerability that was present in the installed version](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-36740), my teammate produced a working payload for the request smuggling. For more information on this part, you can find [Detectify's blog here](https://labs.detectify.com/2021/08/26/how-to-set-up-docker-for-varnish-http-2-request-smuggling/).
 
@@ -842,7 +840,7 @@ slack-url=slack&redirect-url=redirecturl&template-page=owagray&campaign=campaign
 {% endraw %}
 
 
-### \[Web\] GrandMonty - (8 Solves)
+## \[Web\] GrandMonty - (8 Solves)
 
 I worked on the challenge after a teammate leaked the source code of the challenge. Just to briefly explain:
 

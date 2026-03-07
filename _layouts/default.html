@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title | escape }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+  {% assign seo_description = page.description | default: page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape %}
+  <meta name="description" content="{{ seo_description }}">
+  <meta name="keywords" content="Wong Wai Tuck, cybersecurity, CTF, capture the flag, security research, AI security, adversarial machine learning, game theory, vulnerability research, DEFCON, offensive security, watchTowr, SMU, red team">
+  <meta name="author" content="Wong Wai Tuck">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title }}{% endif %}">
+  <meta property="og:description" content="{{ seo_description }}">
+  <meta property="og:url" content="{{ page.url | replace:'index.html','' | absolute_url }}">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+  <meta property="og:image" content="{{ '/images/me.jpg' | absolute_url }}">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@{{ site.twitter_username }}">
+  <meta name="twitter:title" content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title }}{% endif %}">
+  <meta name="twitter:description" content="{{ seo_description }}">
+  <meta name="twitter:image" content="{{ '/images/me.jpg' | absolute_url }}">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "{% if page.layout == 'post' %}BlogPosting{% else %}WebSite{% endif %}",
+    "name": "{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title }}{% endif %}",
+    "url": "{{ page.url | replace:'index.html','' | absolute_url }}",
+    "description": "{{ seo_description }}",
+    {% if page.layout == 'post' %}"datePublished": "{{ page.date | date_to_xmlschema }}",{% endif %}
+    "author": {
+      "@type": "Person",
+      "name": "Wong Wai Tuck",
+      "url": "https://waituck.sg",
+      "jobTitle": "Head of Labs Engineering",
+      "worksFor": { "@type": "Organization", "name": "watchTowr" },
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "Singapore Management University" },
+        { "@type": "CollegeOrUniversity", "name": "Carnegie Mellon University" }
+      ],
+      "knowsAbout": ["Cybersecurity", "CTF", "AI Security", "Adversarial Machine Learning", "Game Theory", "Vulnerability Research", "Red Teaming", "Offensive Security"]
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}">
+  <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+  {% feed_meta %}
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrapper">
+      <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.site-nav').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav">
+        <a href="{{ '/' | relative_url }}">Blog</a>
+        <a href="{{ '/about/' | relative_url }}">About</a>
+        <a href="{{ '/service/' | relative_url }}">Research</a>
+        <a href="{{ '/tags/' | relative_url }}">Tags</a>
+      </nav>
+    </div>
+  </header>
+
+  {{ content }}
+
+  <footer class="site-footer">
+    <div class="wrapper">
+      <div class="footer-links">
+        <a href="https://github.com/{{ site.github_username }}" aria-label="GitHub">
+          <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+        <a href="https://twitter.com/{{ site.twitter_username }}" aria-label="Twitter">
+          <svg viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/></svg>
+        </a>
+        <a href="mailto:{{ site.email | replace: '(at)', '@' | replace: '(dot)', '.' }}" aria-label="Email">
+          <svg viewBox="0 0 16 16"><path d="M0 4a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H2a2 2 0 01-2-2V4zm2-.5a.5.5 0 00-.5.5v.217l6.5 3.827 6.5-3.827V4a.5.5 0 00-.5-.5H2zm13 2.383l-4.758 2.804L14 11.191V5.883zm-.034 6.878L10.93 9.157 8 10.833 5.07 9.157 1.034 12.76A.499.499 0 001.5 13h13a.499.499 0 00.466-.239zM2 11.191l3.758-2.504L2 5.883v5.308z"/></svg>
+        </a>
+        <a href="https://scholar.google.com/citations?user=c0HCvywAAAAJ" aria-label="Google Scholar">
+          <svg viewBox="0 0 16 16"><path d="M8 0L0 6h2.63v7.28C2.63 14.23 3.4 15 4.35 15h7.3c.95 0 1.72-.77 1.72-1.72V6H16L8 0zm0 2.4l4.5 3.6H3.5L8 2.4zM5.07 7.6h5.86v5.86c0 .19-.15.34-.34.34H5.41a.34.34 0 01-.34-.34V7.6z"/></svg>
+        </a>
+      </div>
+      <p>&copy; {{ 'now' | date: '%Y' }} Wong Wai Tuck. Built with Jekyll.</p>
+    </div>
+  </footer>
+</body>
+</html>

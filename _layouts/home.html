@@ -1,0 +1,51 @@
+---
+layout: default
+---
+
+<section class="hero">
+  <div class="hero-inner">
+    <img src="/images/me.jpg" alt="Wong Wai Tuck" class="hero-avatar">
+    <h1>Wong Wai Tuck</h1>
+    <p class="subtitle">Head of Labs Engineering at <a href="https://watchtowr.com/" style="color:rgba(255,255,255,0.9)">watchTowr</a> &middot; PhD Candidate at <a href="https://www.smu.edu.sg/" style="color:rgba(255,255,255,0.9)">SMU</a></p>
+    <p class="subtitle" style="font-size:0.95rem">I enjoy hacking, reading, and exploring the intersection of security with ML and game theory.</p>
+    <div class="hero-links">
+      <a href="https://github.com/{{ site.github_username }}">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+      <a href="https://twitter.com/{{ site.twitter_username }}">
+        <svg viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/></svg>
+        Twitter
+      </a>
+      <a href="https://scholar.google.com/citations?user=c0HCvywAAAAJ">
+        <svg viewBox="0 0 16 16"><path d="M8 0L0 6h2.63v7.28C2.63 14.23 3.4 15 4.35 15h7.3c.95 0 1.72-.77 1.72-1.72V6H16L8 0zm0 2.4l4.5 3.6H3.5L8 2.4zM5.07 7.6h5.86v5.86c0 .19-.15.34-.34.34H5.41a.34.34 0 01-.34-.34V7.6z"/></svg>
+        Scholar
+      </a>
+      <a href="mailto:me@waituck.sg">
+        <svg viewBox="0 0 16 16"><path d="M0 4a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H2a2 2 0 01-2-2V4zm2-.5a.5.5 0 00-.5.5v.217l6.5 3.827 6.5-3.827V4a.5.5 0 00-.5-.5H2zm13 2.383l-4.758 2.804L14 11.191V5.883zm-.034 6.878L10.93 9.157 8 10.833 5.07 9.157 1.034 12.76A.499.499 0 001.5 13h13a.499.499 0 00.466-.239zM2 11.191l3.758-2.504L2 5.883v5.308z"/></svg>
+        Email
+      </a>
+    </div>
+  </div>
+</section>
+
+<main class="page-content">
+  <ul class="post-list">
+    {% for post in site.posts %}
+    <li>
+      <a class="post-card" href="{{ post.url | relative_url }}">
+        <div class="post-card-title">{{ post.title | escape }}</div>
+        <div class="post-card-meta">
+          <time>{{ post.date | date: "%b %-d, %Y" }}</time>
+          {% if post.tags.size > 0 %}
+            &middot;
+            {% for tag in post.tags limit:3 %}
+              <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</main>

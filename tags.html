@@ -5,25 +5,28 @@ description: "Posts indexed by tags"
 permalink: /tags/
 ---
 
-<div id="tags">
 {% assign sorted_tags = site.tags | sort %}
-    <h2>All tags</h2>
-        <p>
-        {% for tag in sorted_tags %}
-            <a class="post-tag" href="{{ site.baseurl }}/tags/#{{ tag[0] | slugify }}">{{ tag[0] }}</a>
-        {% endfor %}
-        </p>
-    <h2>Posts by tags</h2>
-    {% for tag in sorted_tags %}
-        <div id="{{ tag[0] | slugify }}">
-            <h3>{{ tag[0] }}</h3>
-            {% for post in tag[1] %}
-                <ul>
-                    <p>
-                        <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-                    </p>
-                </ul>
-            {% endfor %}
-        </div>
-    {% endfor %}
+
+<div style="margin-bottom: 2rem;">
+  {% for tag in sorted_tags %}
+    <a class="tag" href="#{{ tag[0] | slugify }}" style="font-size: 0.85rem; padding: 0.3rem 0.75rem;">{{ tag[0] }}</a>
+  {% endfor %}
 </div>
+
+{% for tag in sorted_tags %}
+<div id="{{ tag[0] | slugify }}" style="margin-bottom: 2rem;">
+  <h3>{{ tag[0] }}</h3>
+  <ul class="post-list" style="margin-top: 0.5rem;">
+    {% for post in tag[1] %}
+    <li>
+      <a class="post-card" href="{{ post.url | relative_url }}">
+        <div class="post-card-title">{{ post.title | escape }}</div>
+        <div class="post-card-meta">
+          <time>{{ post.date | date: "%b %-d, %Y" }}</time>
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endfor %}
