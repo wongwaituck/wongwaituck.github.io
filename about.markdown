@@ -55,7 +55,7 @@ I also do martial arts, and am an avid fan of Bruce Lee, hence the title of the 
     <span class="cert-date">Spring 2022</span>
   </li>
   <li>
-    <strong>Machine Learning in Production</strong>
+    <a href="https://www.coursera.org/account/accomplishments/verify/D4ZT2ELDVWGF"><strong>Machine Learning in Production</strong></a>
     <span class="cert-date">Summer 2022</span>
   </li>
   <li>
